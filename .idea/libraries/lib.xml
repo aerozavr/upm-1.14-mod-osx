@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-validator-1.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/bcprov-jdk14-145.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/AppleJavaExtensions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javacsv.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-httpclient-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jarbundler-core-3.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

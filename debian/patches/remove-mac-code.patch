@@ -1,0 +1,144 @@
+diff --git a/src/com/_17od/upm/gui/MainWindow.java b/src/com/_17od/upm/gui/MainWindow.java
+index 882908d..3478534 100644
+--- a/src/com/_17od/upm/gui/MainWindow.java
++++ b/src/com/_17od/upm/gui/MainWindow.java
+@@ -800,19 +800,14 @@ public class MainWindow extends JFrame implements ActionListener {
+ 		aboutMenuItem.addActionListener(this);
+ 		aboutMenuItem.setActionCommand(ABOUT_TXT);
+ 
+-		// Because the MAC version of UPM will have a program item in the menu
+-		// bar then these items
+-		// only need to be added on non-mac platforms
+-		if (!PlatformSpecificCode.isMAC()) {
+-			databaseMenu.addSeparator();
+-			databaseMenu.add(exitMenuItem);
+-
+-			helpMenu = new JMenu(Translator.translate("helpMenu"));
+-			helpMenu.setMnemonic(KeyEvent.VK_H);
+-			menuBar.add(helpMenu);
+-
+-			helpMenu.add(aboutMenuItem);
+-		}
++		databaseMenu.addSeparator();
++		databaseMenu.add(exitMenuItem);
++
++		helpMenu = new JMenu(Translator.translate("helpMenu"));
++		helpMenu.setMnemonic(KeyEvent.VK_H);
++		menuBar.add(helpMenu);
++
++		helpMenu.add(aboutMenuItem);
+ 
+ 		return menuBar;
+ 
+@@ -1131,12 +1126,7 @@ public class MainWindow extends JFrame implements ActionListener {
+ 		exportMenuItem.setText(Translator.translate(EXPORT_TXT));
+ 		importMenuItem.setText(Translator.translate(IMPORT_TXT));
+ 
+-		// Because the MAC version of UPM will have a program item in the menu
+-		// bar then these items
+-		// only need to be added on non-mac platforms
+-		if (!PlatformSpecificCode.isMAC()) {
+-			helpMenu.setText(Translator.translate("helpMenu"));
+-		}
++		helpMenu.setText(Translator.translate("helpMenu"));
+ 
+ 		addAccountButton.setToolTipText(Translator.translate(ADD_ACCOUNT_TXT));
+ 		editAccountButton.setToolTipText(Translator.translate(EDIT_ACCOUNT_TXT));
+diff --git a/src/com/_17od/upm/platformspecific/PlatformSpecificCode.java b/src/com/_17od/upm/platformspecific/PlatformSpecificCode.java
+index df55fb0..d33c176 100644
+--- a/src/com/_17od/upm/platformspecific/PlatformSpecificCode.java
++++ b/src/com/_17od/upm/platformspecific/PlatformSpecificCode.java
+@@ -29,18 +29,7 @@ public abstract class PlatformSpecificCode {
+ 
+ 
+     public static PlatformSpecificCode getInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+-        PlatformSpecificCode retVal = null;
+-        
+-        //Use reflection to create the platform specific code because the chances are it won't compile
+-        //on other platforms (causing this class to also fail compilation)
+-        if (isMAC()) {
+-            Class clazz = Class.forName("com._17od.upm.platformspecific.mac.MACOSXSpecificCode");
+-            retVal = (PlatformSpecificCode) clazz.newInstance();
+-        } else {
+-            retVal = new NonPlatformSpecificCode();
+-        }
+-        
+-        return retVal;
++        return new NonPlatformSpecificCode();
+     }
+     
+     
+diff --git a/src/com/_17od/upm/platformspecific/mac/MACOSXSpecificCode.java b/src/com/_17od/upm/platformspecific/mac/MACOSXSpecificCode.java
+deleted file mode 100644
+index a855e3e..0000000
+--- a/src/com/_17od/upm/platformspecific/mac/MACOSXSpecificCode.java
++++ /dev/null
+@@ -1,54 +0,0 @@
+-/*
+- * Universal Password Manager
+- * Copyright (C) 2005-2013 Adrian Smith
+- *
+- * This file is part of Universal Password Manager.
+- *   
+- * Universal Password Manager is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * Universal Password Manager is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with Universal Password Manager; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+- */
+-package com._17od.upm.platformspecific.mac;
+-
+-import com._17od.upm.gui.MainWindow;
+-import com._17od.upm.platformspecific.PlatformSpecificCode;
+-import com.apple.eawt.Application;
+-import com.apple.eawt.ApplicationAdapter;
+-import com.apple.eawt.ApplicationEvent;
+-
+-
+-public class MACOSXSpecificCode extends PlatformSpecificCode {
+-
+-    public void initialiseApplication(final MainWindow mainWindow) {
+-        Application fApplication = Application.getApplication();
+-        fApplication.setEnabledPreferencesMenu(true);
+-        fApplication.setEnabledAboutMenu(true);
+-        fApplication.addApplicationListener(new ApplicationAdapter() {
+-            public void handleAbout(ApplicationEvent e) {
+-                mainWindow.getAboutMenuItem().doClick();
+-                e.setHandled(true);
+-            }
+-
+-            public void handlePreferences(ApplicationEvent e) {
+-                mainWindow.getOptionsButton().doClick();
+-                e.setHandled(true);
+-            }
+-
+-            public void handleQuit(ApplicationEvent e) {
+-                mainWindow.getExitMenuItem().doClick();
+-                e.setHandled(true);
+-            }
+-        });
+-    }
+-
+-}
+diff --git a/src/com/_17od/upm/util/Preferences.java b/src/com/_17od/upm/util/Preferences.java
+index d94bf64..92ddb03 100644
+--- a/src/com/_17od/upm/util/Preferences.java
++++ b/src/com/_17od/upm/util/Preferences.java
+@@ -124,9 +124,6 @@ public class Preferences {
+ 				}
+ 				System.setProperty(PREF_FILE_SYS_PROP, configBase + System.getProperty("file.separator") + "upm.properties");
+ 			}
+-			else if(PlatformSpecificCode.isMAC()) {
+-				System.setProperty(PREF_FILE_SYS_PROP, System.getProperty("user.home") + System.getProperty("file.separator") + "Library" + System.getProperty("file.separator") + "Preferences" + System.getProperty("file.separator") + "upm.properties");
+-			}
+ 		}
+ 
+         propertiesFile = System.getProperty(PREF_FILE_SYS_PROP);
