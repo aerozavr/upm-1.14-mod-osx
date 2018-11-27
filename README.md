@@ -1,1 +1,1 @@
-# upm-1.14-mod-osx
+Works with Jetbrains OpenJDK (should also work with vanilla OpenJDK)
